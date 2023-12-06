@@ -43,7 +43,6 @@
     <div class="image-grid" id="imageGrid"></div>
 
     <script>
-        // Fetch the list of images from the server
         fetch('get_images.php')
             .then(response => response.json())
             .then(data => {
@@ -54,11 +53,11 @@
                     imageItem.classList.add('image-item');
 
                     const imageElement = document.createElement('img');
-                    imageElement.src = 'uploads/' + image.filename;
+                    imageElement.src = image.url;
                     imageElement.alt = 'Uploaded Image';
 
                     const linkElement = document.createElement('a');
-                    linkElement.href = 'uploads/' + image.filename;
+                    linkElement.href = image.url;
                     linkElement.target = '_blank';
 
                     imageItem.appendChild(imageElement);
