@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .image-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .image-item a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Uploaded Images</h1>
+    <div class="image-grid" id="imageGrid"></div>
+
+    <script>
+        // Fetch the list of images from the server
+        fetch('get_images.php')
+            .then(response => response.json())
+            .then(data => {
+                const imageGrid = document.getElementById('imageGrid');
+
+                data.forEach(image => {
+                    const imageItem = document.createElement('div');
+                    imageItem.classList.add('image-item');
+
+                    const imageElement = document.createElement('img');
+                    imageElement.src = 'uploads/' + image.filename;
+                    imageElement.alt = 'Uploaded Image';
+
+                    const linkElement = document.createElement('a');
+                    linkElement.href = 'uploads/' + image.filename;
+                    linkElement.target = '_blank';
+
+                    imageItem.appendChild(imageElement);
+                    imageItem.appendChild(linkElement);
+                    imageGrid.appendChild(imageItem);
+                });
+            })
+            .catch(error => console.error('Error fetching images:', error));
+    </script>
+</body>
+</html>
