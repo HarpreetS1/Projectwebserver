@@ -43,7 +43,7 @@
     <div class="image-grid" id="imageGrid"></div>
 
     <script>
-        fetch('get_images.php')
+        fetch('netlify/get_images.js')
             .then(response => response.json())
             .then(data => {
                 const imageGrid = document.getElementById('imageGrid');
