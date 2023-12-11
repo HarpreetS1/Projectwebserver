@@ -63,7 +63,7 @@ exports.handler = async (event, context) => {
   }
 
   const file = event.files[fileFieldName];
-  const targetDir = 'Projectwebserver/uploads/';
+  const targetDir = 'projectwebserver/uploads/';
   const targetFile = targetDir + file.name;
 
   try {
