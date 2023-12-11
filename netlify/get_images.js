@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const uploadsDir = 'projectwebserver/uploads/';
+const uploadsDir = 'projectwebserver/uploads';
 
 exports.handler = async (event, context) => {
   return new Promise((resolve, reject) => {
