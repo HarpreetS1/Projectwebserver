@@ -1,0 +1,14 @@
+{
+  "name": "Projectwebserver",
+  "version": "1.0.0",
+  "description": "description",
+  
+  "dependencies": {
+    "express": "^4.17.1"  // This version may vary; use the latest stable version
+    // Add other dependencies if needed
+  },
+  "devDependencies": {
+    // Add development dependencies if needed
+  },
+
+}
