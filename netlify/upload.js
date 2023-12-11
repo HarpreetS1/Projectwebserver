@@ -1,44 +1,48 @@
+// netlify/upload.js
+
 const express = require('express');
-const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 
 const app = express();
-const port = 3000;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 
-app.post('/', (req, res) => {
-  // Handle photo upload
+exports.handler = async (event, context) => {
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 400,
+      body: 'Invalid request method.',
+    };
+  }
+
   const fileFieldName = 'file';
   const targetDir = 'uploads/';
-  const targetFile = targetDir + req.files[fileFieldName].name;
+  const targetFile = targetDir + JSON.parse(event.body)[fileFieldName].name;
 
-  req.files[fileFieldName].mv(targetFile, (err) => {
-    if (err) {
-      return res.status(500).send('Error uploading photo.');
-    }
+  const fileBuffer = Buffer.from(JSON.parse(event.body)[fileFieldName].data, 'base64');
 
-    // Get GPS data
-    const latitude = req.get('latitude') || 'N/A';
-    const longitude = req.get('longitude') || 'N/A';
+  // Handle photo upload
+  try {
+    require('fs').writeFileSync(targetFile, fileBuffer);
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: 'Error uploading photo.',
+    };
+  }
 
-    res.send(`Photo uploaded successfully.<br>Latitude: ${latitude}<br>Longitude: ${longitude}`);
+  // Get GPS data
+  const latitude = event.headers.latitude || 'N/A';
+  const longitude = event.headers.longitude || 'N/A';
 
-    // Save GPS data to a database or perform other actions as needed
-    // ...
+  // Save GPS data to a database or perform other actions as needed
+  // ...
 
-    // Display map with location
-    const mapIframe = `<iframe width="600" height="450" frameborder="0" style="border:0" src="https://maps.google.com?q=${latitude},${longitude}&output=embed"></iframe>`;
-    console.log(mapIframe);
-  });
-});
+  // Display map with location
+  const mapIframe = `<iframe width="600" height="450" frameborder="0" style="border:0" src="https://maps.google.com?q=${latitude},${longitude}&output=embed"></iframe>`;
+  console.log(mapIframe);
 
-app.use((req, res) => {
-  res.status(400).send('Invalid request.');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+  return {
+    statusCode: 200,
+    body: `Photo uploaded successfully.\nLatitude: ${latitude}\nLongitude: ${longitude}`,
+  };
+};
