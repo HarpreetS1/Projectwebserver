@@ -4,11 +4,10 @@
   "description": "description",
   
   "dependencies": {
-    "express": "^4.17.1"  // This version may vary; use the latest stable version
-    // Add other dependencies if needed
+    "express": "^4.17.1"  
   },
   "devDependencies": {
-    // Add development dependencies if needed
+    
   },
 
 }
