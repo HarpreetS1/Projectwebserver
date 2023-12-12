@@ -1,38 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Upload</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32-CAM Webpage</title>
+    <!-- Add your CSS and JS links here -->
 </head>
 <body>
-  <h1>Image Upload</h1>
-  <form id="uploadForm" enctype="multipart/form-data">
-    <input type="file" name="image" accept="image/*">
-    <button type="submit">Upload Image</button>
-  </form>
-  <div id="message"></div>
+    <h1>ESP32-CAM Webpage</h1>
+    <button onclick="capturePhoto()">Capture Photo</button>
 
-  <script>
-    const uploadForm = document.getElementById('uploadForm');
-    const messageDiv = document.getElementById('message');
-
-    uploadForm.addEventListener('submit', async function (event) {
-      event.preventDefault();
-      
-      const formData = new FormData(this);
-      const response = await fetch('https://your-nodejs-api-url/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        messageDiv.innerHTML = `Image uploaded successfully! Filename: ${data.filename}`;
-      } else {
-        messageDiv.innerHTML = 'Image upload failed.';
-      }
-    });
-  </script>
+    <script>
+        function capturePhoto() {
+            fetch('/capture')
+                .then(response => response.text())
+                .then(data => alert(data))
+                .catch(error => console.error(error));
+        }
+    </script>
 </body>
 </html>
