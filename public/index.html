@@ -3,46 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>image taken</title>
-  <style>
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-  </style>
+  <title>Image Upload</title>
 </head>
 <body>
-  <h1>ESP32 Camera Viewer</h1>
-  <div id="image-container"></div>
+  <h1>Image Upload</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*">
+    <button type="submit">Upload Image</button>
+  </form>
+  <div id="message"></div>
 
   <script>
-    // Function to fetch and display images
-    function fetchAndDisplayImages() {
-      // Replace with your ESP32 web server IP address
-      const serverIP = 'your-esp32-ip';
+    const uploadForm = document.getElementById('uploadForm');
+    const messageDiv = document.getElementById('message');
 
-      // Number of images to display (adjust as needed)
-      const numImages = 5;
+    uploadForm.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      
+      const formData = new FormData(this);
+      const response = await fetch('https://your-nodejs-api-url/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-      // Container to display images
-      const imageContainer = document.getElementById('image-container');
-
-      // Fetch images from the server
-      for (let i = 1; i <= numImages; i++) {
-        const imageUrl = `http://${serverIP}/image${i}.jpg`;
-        
-        // Create an image element
-        const img = document.createElement('img');
-        img.src = imageUrl;
-        img.alt = `Image ${i}`;
-
-        // Append the image to the container
-        imageContainer.appendChild(img);
+      if (response.ok) {
+        const data = await response.json();
+        messageDiv.innerHTML = `Image uploaded successfully! Filename: ${data.filename}`;
+      } else {
+        messageDiv.innerHTML = 'Image upload failed.';
       }
-    }
-
-    // Call the function when the page is loaded
-    window.onload = fetchAndDisplayImages;
+    });
   </script>
 </body>
 </html>
