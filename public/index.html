@@ -1,19 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netlify Flask Demo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP32 Camera Viewer</title>
+  <style>
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
 </head>
 <body>
-    <h1>Netlify Flask Demo</h1>
-    <p>Loading...</p>
-    <script>
-        fetch('/.netlify/functions/flask-app')
-            .then(response => response.text())
-            .then(data => {
-                document.querySelector('p').innerText = data;
-            });
-    </script>
+  <h1>ESP32 Camera Viewer</h1>
+  <div id="image-container"></div>
+
+  <script>
+    // Function to fetch and display images
+    function fetchAndDisplayImages() {
+      // Replace with your ESP32 web server IP address
+      const serverIP = 'your-esp32-ip';
+
+      // Number of images to display (adjust as needed)
+      const numImages = 5;
+
+      // Container to display images
+      const imageContainer = document.getElementById('image-container');
+
+      // Fetch images from the server
+      for (let i = 1; i <= numImages; i++) {
+        const imageUrl = `http://${serverIP}/image${i}.jpg`;
+        
+        // Create an image element
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = `Image ${i}`;
+
+        // Append the image to the container
+        imageContainer.appendChild(img);
+      }
+    }
+
+    // Call the function when the page is loaded
+    window.onload = fetchAndDisplayImages;
+  </script>
 </body>
 </html>
