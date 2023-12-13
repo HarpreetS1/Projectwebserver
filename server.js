@@ -14,14 +14,15 @@ app.post('/upload', upload.single('photo'), (req, res) => {
   try {
     // Get the uploaded image data
     const imageBuffer = req.file.buffer;
-
+    
     // Generate a unique filename
     const filename = `photo_${Date.now()}.jpg`;
-
+//rename old file
+    fs.rename( './uploads/latest-image.png}', `./uploads/${filename}`, callback )
     // Save the image to the server
-    fs.writeFileSync(`./uploads/${filename}`, imageBuffer);
+    fs.writeFileSync(`./uploads/latest-image.png}`, imageBuffer);
 
-    console.log(`Image saved: ${filename}`);
+    console.log(`Image saved: latest-image.png `);
     res.status(200).send('Image received and saved successfully.');
   } catch (error) {
     console.error('Error handling image upload:', error);
