@@ -1,30 +1,67 @@
+<!-- 
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com/esp32-cam-post-image-photo-server/
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files.
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+-->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <title>ESP32-CAM Photo Gallery</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Upload</title>
-</head>
-<body>
-
+  <style>
+    .flex-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .flex-container > div {
+      text-align: center;
+      margin: 10px;
+    }
+  </style>
+</head><body>
+<h2>ESP32-CAM Photo Gallery</h2>
 <?php
-  // Check if the image has been uploaded and display it
-  if(isset($_POST["submit"])) {
-    if($uploadOk == 1) {
-      echo "<p>The file ". basename( $_FILES["imageFile"]["name"]). " has been uploaded.</p>";
-      echo "<img src='uploads/" . date('Y.m.d_H:i:s_', $datum) . basename($_FILES["imageFile"]["name"]) . "' alt='Uploaded Image'>";
-    } else {
-      echo "<p>Sorry, there was an error uploading your file.</p>";
+  // Image extensions
+  $image_extensions = array("png","jpg","jpeg","gif");
+
+  // Check delete HTTP GET request - remove images
+  if(isset($_GET["delete"])){
+    $imageFileType = strtolower(pathinfo($_GET["delete"],PATHINFO_EXTENSION));
+    if (file_exists($_GET["delete"]) && ($imageFileType == "jpg" ||  $imageFileType == "png" ||  $imageFileType == "jpeg") ) {
+      echo "File found and deleted: " .  $_GET["delete"];
+      unlink($_GET["delete"]);
+    }
+    else {
+      echo 'File not found - <a href="gallery.php">refresh</a>';
     }
   }
+  // Target directory
+  $dir = 'uploads/';
+  if (is_dir($dir)){
+    echo '<div class="flex-container">';
+    $count = 1;
+    $files = scandir($dir);
+    rsort($files);
+    foreach ($files as $file) {
+      if ($file != '.' && $file != '..') {?>
+        <div>
+          <p><a href="gallery.php?delete=<?php echo $dir . $file; ?>">Delete file</a> - <?php echo $file; ?></p>
+          <a href="<?php echo $dir . $file; ?>">
+            <img src="<?php echo $dir . $file; ?>" style="width: 350px;" alt="" title=""/>
+          </a>
+       </div>
+<?php
+       $count++;
+      }
+    }
+  }
+  if($count==1) { echo "<p>No images found</p>"; } 
 ?>
-
-<form action="upload.php" method="post" enctype="multipart/form-data">
-  <label for="imageFile">Select image to upload:</label>
-  <input type="file" name="imageFile" id="imageFile" required>
-  <input type="submit" value="Upload Image" name="submit">
-</form>
-
+  </div>
 </body>
 </html>
-
