@@ -28,7 +28,7 @@
     // Fetch the latest image from the server and display it
     async function fetchLatestImage() {
       try {
-        const response = await fetch('/latest-image');
+        const response = await fetch('uploads/latest-image');
         const imageUrl = await response.json();
 
         const imageContainer = document.getElementById('imageContainer');
